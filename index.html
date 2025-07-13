@@ -1,56 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- 
-      This is an HTML comment
-      You can write text in a comment and the content won't be visible in the page
-    -->
+  <meta charset="UTF-8" />
+  <title>Peace 🕊️</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #e6f0ff;
+      padding: 40px;
+      text-align: center;
+    }
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="https://glitch.com/favicon.ico" />
+    h1 {
+      color: #0066cc;
+    }
 
-  <!--
-      This is the page head - it contains info the browser uses
-      Like the title, which appears on the browser tab but not inside the page
-      Further down you'll see the content that displays in the page
-    -->
-  <title>Hello World!</title>
+    input {
+      padding: 10px;
+      margin: 6px;
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
 
-  <!-- The website stylesheet -->
-  <link rel="stylesheet" href="/style.css" />
+    button {
+      padding: 10px 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-  <!-- The website JavaScript file -->
-  <script src="/script.js" defer></script>
+    button:hover {
+      background: #0056b3;
+    }
+
+    .box {
+      margin: 20px auto;
+      max-width: 300px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
-
 <body>
-  <!--
-      The body includes the content you see in the page
-      Each element is defined using tags, like this <div></div>
-      The attributes like class="wrapper" let us style elements in the CSS
-    -->
-  <div class="wrapper">
-    <div class="content" role="main">
-      <h1 class="title">Oh hi website!</h1>
-      <img src="/cool-website.svg" class="illustration" alt="cool website" />
-      <div class="instructions">
-        <p>
-          Fork <a href="https://github.com/glitchdotcom/website-to-compute">this project</a> and open it in a GitHub Codespace.
-        </p>
-        <p> Follow the steps in the README to deploy your new website to Fastly in a few steps!
-        </p>
 
-      </div>
+  <h1>Welcome to Peace 🕊️</h1>
 
-      <footer class="footer">
-        <div>
-          <a class="remix" href="https://github.com/glitchdotcom/website-to-compute">🚧 Get your own site</a>
-        </div>
-      </footer>
-    </div>
+  <div id="signup-section" class="box">
+    <h2>Create Account</h2>
+    <input id="signup-username" type="text" placeholder="Username" /><br />
+    <input id="signup-password" type="password" placeholder="Password" /><br />
+    <button onclick="signUp()">Sign Up</button>
   </div>
-</body>
 
+  <div id="login-section" class="box">
+    <h2>Login</h2>
+    <input id="login-username" type="text" placeholder="Username" /><br />
+    <input id="login-password" type="password" placeholder="Password" /><br />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="user-section" class="box" style="display:none;">
+    <h2 id="welcome-message"></h2>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    function signUp() {
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value;
+
+      if (!username || !password) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (users[username]) {
+        alert("Username already exists!");
+        return;
+      }
+
+      users[username] = { password };
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Account created! You can now log in.");
+      document.getElementById('signup-username').value = '';
+      document.getElementById('signup-password').value = '';
+    }
+
+    function login() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (users[username] && users[username].password === password) {
+        localStorage.setItem("loggedInUser", username);
+        alert("Welcome back to Peace, " + username + "!");
+        render();
+      } else {
+        alert("Invalid login. Please try again.");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      render();
+    }
+
+    function render() {
+      const user = localStorage.getItem("loggedInUser");
+
+      document.getElementById('signup-section').style.display = user ? 'none' : 'block';
+      document.getElementById('login-section').style.display = user ? 'none' : 'block';
+      document.getElementById('user-section').style.display = user ? 'block' : 'none';
+
+      if (user) {
+        document.getElementById('welcome-message').textContent = "Hello, " + user + " 👋";
+      }
+    }
+
+    // On page load
+    render();
+  </script>
+
+</body>
 </html>
